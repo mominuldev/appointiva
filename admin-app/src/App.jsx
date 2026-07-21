@@ -28,8 +28,8 @@ const NAV_GROUPS = [
 	{
 		label: 'Overview',
 		items: [
-			{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, render: () => <Dashboard /> },
-			{ id: 'bookings', label: 'Bookings', icon: CalendarCheck2, render: () => <Bookings /> },
+			{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, render: ( navigate ) => <Dashboard navigate={ navigate } /> },
+			{ id: 'bookings', label: 'Bookings', icon: CalendarCheck2, render: ( navigate, params ) => <Bookings initialSelectedId={ params?.bookingId } /> },
 		],
 	},
 	{
@@ -53,10 +53,33 @@ const NAV_GROUPS = [
 
 const cfg = window.AppointivaAdminConfig || {};
 
+// Pro's white-label add-on injects `cfg.brand` via the appointiva_admin_config
+// filter (see Admin\Assets::register()) when an agency/reseller has configured
+// a brand override; every field is optional and independently falls back to
+// Appointiva's own defaults, so this renders identically when Pro isn't
+// active or white-labeling isn't enabled.
+const brand = {
+	name: cfg.brand?.name || 'Appointiva',
+	tagline: cfg.brand?.tagline || 'Booking suite',
+	logoUrl: cfg.brand?.logoUrl || null,
+	hideUpsell: !! cfg.brand?.hideUpsell,
+};
+
 const EXTRA_SCREENS_SLOT = 'appointiva-admin-screens';
 
 export function App() {
-	const [ activeId, setActiveId ] = useState( 'dashboard' );
+	// Google's OAuth redirect (see Settings.jsx's Google Calendar card) lands
+	// back on this page as a fresh full page load, with no client-side routing
+	// to carry the "which screen was I on" state across that reload — so we
+	// read it once from the query string instead.
+	const initialId = new URLSearchParams( window.location.search ).get( 'appointiva_gcal' ) ? 'settings' : 'dashboard';
+	const [ activeId, setActiveId ] = useState( initialId );
+	const [ navParams, setNavParams ] = useState( null );
+
+	function navigate( screenId, params ) {
+		setActiveId( screenId );
+		setNavParams( params || null );
+	}
 
 	// Appointiva Pro (and any other extension) registers extra screens here via
 	// window.Appointiva.admin.registerFill('appointiva-admin-screens', { id, label, icon, render, order }).
@@ -95,12 +118,16 @@ export function App() {
 			<div className="flex min-h-[calc(100vh-64px)] overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-soft">
 				<aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
 					<div className="flex items-center gap-2.5 px-5 py-6">
-						<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient shadow-soft">
-							<CalendarHeart className="h-5 w-5 text-white" strokeWidth={ 2.25 } />
-						</div>
+						{ brand.logoUrl ? (
+							<img src={ brand.logoUrl } alt={ brand.name } className="h-9 w-9 shrink-0 rounded-xl object-contain" />
+						) : (
+							<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient shadow-soft">
+								<CalendarHeart className="h-5 w-5 text-white" strokeWidth={ 2.25 } />
+							</div>
+						) }
 						<div>
-							<p className="text-sm font-bold leading-none text-slate-900">Appointiva</p>
-							<p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-slate-400">Booking suite</p>
+							<p className="text-sm font-bold leading-none text-slate-900">{ brand.name }</p>
+							<p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-slate-400">{ brand.tagline }</p>
 						</div>
 					</div>
 
@@ -116,7 +143,7 @@ export function App() {
 										return (
 											<button
 												key={ item.id }
-												onClick={ () => setActiveId( item.id ) }
+												onClick={ () => navigate( item.id ) }
 												className={ `group relative flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150 ${
 													isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
 												}` }
@@ -132,21 +159,23 @@ export function App() {
 						) ) }
 					</nav>
 
-					<div className="m-3 rounded-xl bg-gradient-to-br from-brand-50 to-white p-4">
-						<div className="flex items-center gap-1.5 text-brand-700">
-							<Sparkles className="h-3.5 w-3.5" />
-							<p className="text-xs font-semibold">Growing your business?</p>
+					{ ! brand.hideUpsell && (
+						<div className="m-3 rounded-xl bg-gradient-to-br from-brand-50 to-white p-4">
+							<div className="flex items-center gap-1.5 text-brand-700">
+								<Sparkles className="h-3.5 w-3.5" />
+								<p className="text-xs font-semibold">Growing your business?</p>
+							</div>
+							<p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+								Appointiva Pro adds multi-staff scheduling, WhatsApp reminders, and a client dashboard.
+							</p>
 						</div>
-						<p className="mt-1.5 text-xs leading-relaxed text-slate-500">
-							Appointiva Pro adds multi-staff scheduling, WhatsApp reminders, and a client dashboard.
-						</p>
-					</div>
+					) }
 				</aside>
 
 				<div className="flex flex-1 flex-col overflow-hidden">
 					<header className="flex items-center justify-between border-b border-slate-200 bg-white/80 px-8 py-4 backdrop-blur">
 						<div>
-							<p className="text-xs font-medium text-slate-400">Appointiva</p>
+							<p className="text-xs font-medium text-slate-400">{ brand.name }</p>
 							<h2 className="text-lg font-semibold text-slate-900">{ active.label }</h2>
 						</div>
 						<div className="flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
@@ -156,7 +185,7 @@ export function App() {
 					</header>
 
 					<main className="appointiva-scrollbar flex-1 overflow-y-auto px-8 py-8">
-						<div className="appointiva-animate-in mx-auto">{ active.render() }</div>
+						<div className="appointiva-animate-in mx-auto">{ active.render( navigate, navParams ) }</div>
 					</main>
 				</div>
 

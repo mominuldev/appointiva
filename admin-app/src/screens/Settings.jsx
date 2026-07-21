@@ -1,8 +1,151 @@
 import { useEffect, useState } from 'react';
-import { Save, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Save, CheckCircle2, AlertTriangle, CalendarDays, Unlink } from 'lucide-react';
 import { apiClient } from '../api/client';
 import { Slot } from '../slot-fill/Slot';
-import { Card, PageHeader, SectionTitle, Field, Input, Select, Radio, Checkbox, Button } from '../components/ui';
+import { Card, PageHeader, SectionTitle, Field, Input, Select, Radio, Checkbox, Button, Badge } from '../components/ui';
+
+const cfg = window.AppointivaAdminConfig || {};
+
+const GCAL_STATUS_MESSAGES = {
+	connected: { tone: 'success', text: 'Google Calendar connected successfully.' },
+	error: { tone: 'error', text: 'Could not connect to Google Calendar. Double-check the client ID/secret and try again.' },
+	missing_client_id: { tone: 'error', text: 'Save a Google OAuth client ID and secret before connecting.' },
+};
+
+const defaultGoogleCalendar = {
+	client_id: '',
+	client_secret: '',
+	calendar_id: 'primary',
+	configured: false,
+	connected: false,
+};
+
+function GoogleCalendarCard() {
+	const [ form, setForm ] = useState( defaultGoogleCalendar );
+	const [ saving, setSaving ] = useState( false );
+	const [ saved, setSaved ] = useState( false );
+	const [ disconnecting, setDisconnecting ] = useState( false );
+	const [ message, setMessage ] = useState( '' );
+	const [ banner, setBanner ] = useState( null );
+
+	function load() {
+		apiClient.get( '/admin/settings/google-calendar' ).then( ( d ) => setForm( ( f ) => ( { ...f, ...d, client_secret: '' } ) ) );
+	}
+
+	useEffect( () => {
+		load();
+
+		const status = new URLSearchParams( window.location.search ).get( 'appointiva_gcal' );
+
+		if ( status ) {
+			setBanner( GCAL_STATUS_MESSAGES[ status ] || null );
+
+			const url = new URL( window.location.href );
+			url.searchParams.delete( 'appointiva_gcal' );
+			window.history.replaceState( {}, '', url.toString() );
+		}
+	}, [] );
+
+	function save( e ) {
+		e.preventDefault();
+		setSaving( true );
+		setSaved( false );
+		apiClient
+			.put( '/admin/settings/google-calendar', form )
+			.then( () => {
+				setSaved( true );
+				load();
+			} )
+			.catch( ( err ) => setMessage( err.message ) )
+			.finally( () => setSaving( false ) );
+	}
+
+	function disconnect() {
+		setDisconnecting( true );
+		apiClient
+			.post( '/admin/google-calendar/disconnect' )
+			.then( load )
+			.catch( ( err ) => setMessage( err.message ) )
+			.finally( () => setDisconnecting( false ) );
+	}
+
+	return (
+		<Card>
+			<div className="mb-5 flex items-start justify-between gap-4">
+				<div className="flex items-center gap-3">
+					<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
+						<CalendarDays className="h-5 w-5" strokeWidth={ 2 } />
+					</div>
+					<div>
+						<div className="flex items-center gap-2">
+							<h2 className="text-base font-semibold text-slate-900">Google Calendar</h2>
+							<Badge tone={ form.connected ? 'success' : 'neutral' } dot>
+								{ form.connected ? 'Connected' : 'Not connected' }
+							</Badge>
+						</div>
+						<p className="text-sm text-slate-500">Push confirmed bookings to a connected Google Calendar.</p>
+					</div>
+				</div>
+			</div>
+
+			{ banner && (
+				<p
+					className={ `mb-4 rounded-lg px-3.5 py-2.5 text-sm ${
+						banner.tone === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+					}` }
+				>
+					{ banner.text }
+				</p>
+			) }
+
+			{ message && <p className="mb-4 rounded-lg bg-rose-50 px-3.5 py-2.5 text-sm text-rose-700">{ message }</p> }
+
+			<form onSubmit={ save } className="space-y-4">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<Field label="OAuth client ID">
+						<Input value={ form.client_id } onChange={ ( e ) => setForm( { ...form, client_id: e.target.value } ) } />
+					</Field>
+					<Field label="OAuth client secret" hint="Leave blank to keep the current secret">
+						<Input
+							type="password"
+							value={ form.client_secret }
+							onChange={ ( e ) => setForm( { ...form, client_secret: e.target.value } ) }
+						/>
+					</Field>
+					<Field label="Calendar ID" hint="Use 'primary' for the account's main calendar.">
+						<Input value={ form.calendar_id } onChange={ ( e ) => setForm( { ...form, calendar_id: e.target.value } ) } />
+					</Field>
+				</div>
+
+				<div className="flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4">
+					<Button type="submit" size="sm" icon={ saved ? CheckCircle2 : Save } loading={ saving }>
+						{ saved ? 'Saved' : 'Save credentials' }
+					</Button>
+
+					{ form.connected ? (
+						<Button type="button" variant="secondary" size="sm" icon={ Unlink } loading={ disconnecting } onClick={ disconnect }>
+							Disconnect
+						</Button>
+					) : (
+						<Button
+							type="button"
+							variant="secondary"
+							size="sm"
+							icon={ CalendarDays }
+							disabled={ ! form.configured }
+							title={ form.configured ? '' : 'Save a client ID and secret first' }
+							onClick={ () => {
+								window.location.href = `${ cfg.adminUrl }?page=appointiva&appointiva_gcal_action=connect`;
+							} }
+						>
+							Connect with Google
+						</Button>
+					) }
+				</div>
+			</form>
+		</Card>
+	);
+}
 
 const DATE_FORMATS = [ 'Y-m-d', 'm/d/Y', 'd/m/Y', 'd.m.Y', 'F j, Y', 'j F Y' ];
 
@@ -158,6 +301,8 @@ export function Settings() {
 					</Button>
 				</form>
 			</Card>
+
+			<GoogleCalendarCard />
 
 			<Card className="border-amber-200 bg-amber-50/40">
 				<div className="mb-4 flex items-center gap-2 text-amber-800">

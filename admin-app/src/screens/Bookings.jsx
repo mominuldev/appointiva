@@ -24,49 +24,12 @@ import {
 import { apiClient } from '../api/client';
 import { Card, PageHeader, SectionTitle, Badge, Select, Input, Field, Textarea, Button, IconButton, Modal, EmptyState, Skeleton, Toast } from '../components/ui';
 import { statusTone, initials, avatarTone } from '../lib/status';
+import { currencySymbol, formatPrice, formatTime, formatDate, formatDateTime } from '../lib/format';
 
 const STATUS_OPTIONS = [ 'pending', 'offer_sent', 'confirmed', 'declined', 'cancelled', 'completed', 'no_show', 'expired' ];
 const PER_PAGE_OPTIONS = [ 10, 25, 50, 100 ];
-const CURRENCY_SYMBOLS = { USD: '$', EUR: '€', GBP: '£' };
-
-function currencySymbol( code ) {
-	return CURRENCY_SYMBOLS[ code ] || code || '';
-}
-
-function formatPrice( booking ) {
-	const price = Number( booking.price );
-	return price > 0 ? `${ currencySymbol( booking.currency ) }${ price.toFixed( 2 ) }` : '—';
-}
 
 const emptyOffer = { open: false, booking: null, price: '', note: '', saving: false };
-
-const WEEKDAYS = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
-const MONTHS = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-
-// Formats MySQL date/time strings by hand rather than via `new Date(str)` —
-// that parses as UTC and re-renders in the browser's local offset, which can
-// shift the displayed day/hour away from the site's actual timezone.
-function formatTime( hhmm ) {
-	const [ h, min ] = hhmm.split( ':' ).map( Number );
-	const period = h >= 12 ? 'PM' : 'AM';
-	const hour12 = h % 12 || 12;
-	return `${ hour12 }:${ String( min ).padStart( 2, '0' ) } ${ period }`;
-}
-
-function formatDate( yyyyMmDd ) {
-	const [ y, m, d ] = yyyyMmDd.split( '-' ).map( Number );
-	const weekday = WEEKDAYS[ new Date( y, m - 1, d ).getDay() ];
-	return `${ weekday }, ${ MONTHS[ m - 1 ] } ${ d }, ${ y }`;
-}
-
-function formatDateTime( mysqlDateTime ) {
-	if ( ! mysqlDateTime ) {
-		return '—';
-	}
-
-	const [ datePart, timePart ] = mysqlDateTime.split( ' ' );
-	return `${ formatDate( datePart ) } · ${ formatTime( timePart ) }`;
-}
 
 function InfoRow( { icon: Icon, label, value } ) {
 	return (
@@ -82,7 +45,7 @@ function InfoRow( { icon: Icon, label, value } ) {
 	);
 }
 
-export function Bookings() {
+export function Bookings( { initialSelectedId } ) {
 	const [ bookings, setBookings ] = useState( [] );
 	const [ total, setTotal ] = useState( 0 );
 	const [ loading, setLoading ] = useState( true );
@@ -101,7 +64,7 @@ export function Bookings() {
 	const [ offer, setOffer ] = useState( emptyOffer );
 	const [ toast, setToast ] = useState( '' );
 
-	const [ selectedId, setSelectedId ] = useState( null );
+	const [ selectedId, setSelectedId ] = useState( initialSelectedId || null );
 	const [ detail, setDetail ] = useState( null );
 	const [ detailLoading, setDetailLoading ] = useState( false );
 
@@ -425,7 +388,7 @@ export function Bookings() {
 			) : (
 				<>
 					<Card className="bg-slate-50/60">
-				<div className="flex flex-wrap items-center gap-3">
+				<div className="grid grid-cols-4 gap-3">
 					<Select className="w-auto min-w-[10rem]" value={ status } onChange={ ( e ) => setStatus( e.target.value ) }>
 						<option value="">All Statuses</option>
 						{ STATUS_OPTIONS.map( ( s ) => (
@@ -444,10 +407,10 @@ export function Bookings() {
 					</Select>
 					<Input type="date" className="w-auto" value={ dateFrom } onChange={ ( e ) => setDateFrom( e.target.value ) } />
 					<Input type="date" className="w-auto" value={ dateTo } onChange={ ( e ) => setDateTo( e.target.value ) } />
-					<div className="relative min-w-[14rem] flex-1">
+					<div className="relative min-w-full w-full flex-1">
 						<Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 						<Input
-							className="pl-9"
+							className="!pl-9 h-[50px]"
 							placeholder="Search name or email..."
 							value={ searchInput }
 							onChange={ ( e ) => setSearchInput( e.target.value ) }
@@ -537,19 +500,7 @@ export function Bookings() {
 													</Button>
 												</>
 											) }
-											{ 'confirmed' === booking.status && (
-												<Select
-													className="w-36 py-1.5 text-xs"
-													value=""
-													onChange={ ( e ) => e.target.value && changeStatus( booking.id, e.target.value ) }
-												>
-													<option value="">Update status</option>
-													<option value="cancelled">Cancelled</option>
-													<option value="completed">Completed</option>
-													<option value="no_show">No-show</option>
-												</Select>
-											) }
-											<IconButton icon={ Trash2 } tone="danger" onClick={ () => removeBooking( booking ) } aria-label="Delete booking" />
+										<IconButton icon={ Trash2 } tone="danger" onClick={ () => removeBooking( booking ) } aria-label="Delete booking" />
 										</div>
 									</td>
 								</tr>

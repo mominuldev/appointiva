@@ -21,7 +21,10 @@ final class Google_Calendar {
 
 	private const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 	private const EVENTS_URL = 'https://www.googleapis.com/calendar/v3/calendars/%s/events';
-	private const SCOPE = 'https://www.googleapis.com/auth/calendar.events';
+	// Not just calendar.events: Appointiva Pro's two-way sync add-on reuses this
+	// same connection to query the freeBusy API, which calendar.events alone
+	// does not grant access to.
+	private const SCOPE = 'https://www.googleapis.com/auth/calendar';
 
 	public function register_hooks(): void {
 		add_action( 'appointiva_after_booking_created', array( $this, 'maybe_push_event' ) );
@@ -39,14 +42,20 @@ final class Google_Calendar {
 			return '';
 		}
 
+		// add_query_arg() does not URL-encode its values (see
+		// _http_build_query()'s $urlencode=false in WP core) — callers are
+		// expected to encode anything that isn't already known-safe. This
+		// matters here because $redirect_uri legitimately contains its own
+		// '?'/'&' (Pro's OAuth handler lives at admin.php?page=...), which
+		// would otherwise corrupt the outer query string.
 		return add_query_arg(
 			array(
-				'client_id'              => $settings['client_id'],
-				'redirect_uri'           => $redirect_uri,
+				'client_id'              => rawurlencode( $settings['client_id'] ),
+				'redirect_uri'           => rawurlencode( $redirect_uri ),
 				'response_type'          => 'code',
 				'access_type'            => 'offline',
 				'prompt'                 => 'consent',
-				'scope'                  => self::SCOPE,
+				'scope'                  => rawurlencode( self::SCOPE ),
 			),
 			'https://accounts.google.com/o/oauth2/v2/auth'
 		);

@@ -123,7 +123,11 @@ final class Plugin {
 		$c->set( 'rest.public', fn( $c ) => new Public_Controller( $c->get( 'booking.availability' ), $c->get( 'booking.manager' ) ) );
 		$c->set(
 			'rest.admin',
-			fn( $c ) => new Admin_Controller( $c->get( 'booking.manager' ), $c->get( 'notifications.smtp' ) )
+			fn( $c ) => new Admin_Controller(
+				$c->get( 'booking.manager' ),
+				$c->get( 'notifications.smtp' ),
+				$c->get( 'integrations.google_calendar' )
+			)
 		);
 
 		$c->set( 'admin.assets', fn() => new Admin_Assets() );

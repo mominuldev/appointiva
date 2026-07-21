@@ -11,10 +11,12 @@
 
 namespace Appointiva\Rest;
 
+use Appointiva\Admin\Admin;
 use Appointiva\Booking\Booking_Manager;
 use Appointiva\Booking\Status;
 use Appointiva\Database\Installer;
 use Appointiva\Database\Settings_Repository;
+use Appointiva\Integrations\Google_Calendar;
 use Appointiva\Notifications\Smtp_Settings;
 use Appointiva\Support\Encryption;
 use Appointiva\Support\General_Settings;
@@ -31,10 +33,15 @@ final class Admin_Controller {
 
 	private const NAMESPACE = 'appointiva/v1';
 
-	public function __construct( private Booking_Manager $bookings, private Smtp_Settings $smtp ) {}
+	public function __construct(
+		private Booking_Manager $bookings,
+		private Smtp_Settings $smtp,
+		private Google_Calendar $google_calendar
+	) {}
 
 	public function register_hooks(): void {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		add_action( 'admin_init', array( $this, 'maybe_handle_google_calendar_oauth' ) );
 	}
 
 	public function register_routes(): void {
@@ -108,6 +115,19 @@ final class Admin_Controller {
 				),
 			) );
 		}
+
+		// Connect/callback are deliberately NOT REST routes: both are reached by
+		// a plain browser navigation (the "Connect" link, and Google's own
+		// redirect back), never by fetch(), and WordPress's REST cookie auth
+		// (rest_cookie_check_errors()) resets the current user to a guest on
+		// any cookie-authenticated request that doesn't carry an X-WP-Nonce
+		// header/param — which a plain navigation never does. See
+		// maybe_handle_google_calendar_oauth(), hooked to admin_init instead.
+		register_rest_route( self::NAMESPACE, '/admin/google-calendar/disconnect', array(
+			'methods'             => WP_REST_Server::CREATABLE,
+			'callback'            => array( $this, 'disconnect_google_calendar' ),
+			'permission_callback' => $permission,
+		) );
 	}
 
 	public function check_permission(): bool {
@@ -257,9 +277,24 @@ final class Admin_Controller {
 		global $wpdb;
 		$bookings = $this->table( 'bookings' );
 
-		$today      = gmdate( 'Y-m-d' );
-		$week_ahead = gmdate( 'Y-m-d', time() + 7 * DAY_IN_SECONDS );
+		$today       = gmdate( 'Y-m-d' );
+		$week_ahead  = gmdate( 'Y-m-d', time() + 7 * DAY_IN_SECONDS );
 		$month_start = gmdate( 'Y-m-01' );
+		$month_end   = gmdate( 'Y-m-t' );
+
+		$calendar_rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT DATE(starts_at) AS day, COUNT(*) AS total FROM %i WHERE starts_at BETWEEN %s AND %s GROUP BY DATE(starts_at)',
+				$bookings,
+				$month_start . ' 00:00:00',
+				$month_end . ' 23:59:59'
+			)
+		);
+
+		$calendar = array();
+		foreach ( $calendar_rows as $row ) {
+			$calendar[ $row->day ] = (int) $row->total;
+		}
 
 		return new WP_REST_Response(
 			array(
@@ -267,6 +302,7 @@ final class Admin_Controller {
 				'upcoming'   => (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE starts_at BETWEEN %s AND %s', $bookings, $today, $week_ahead ) ),
 				'pending'    => (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE status = %s', $bookings, Status::PENDING->value ) ),
 				'this_month' => (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE starts_at >= %s', $bookings, $month_start ) ),
+				'calendar'   => $calendar,
 			)
 		);
 	}
@@ -362,6 +398,8 @@ final class Admin_Controller {
 		$page     = max( 1, (int) ( $request->get_param( 'page' ) ?: 1 ) );
 		$offset   = ( $page - 1 ) * $per_page;
 
+		$sort_column = 'created_at' === $request->get_param( 'sort' ) ? 'b.created_at' : 'b.starts_at';
+
 		$where_sql = implode( ' AND ', $where );
 
 		$from_sql = "FROM %i b
@@ -381,7 +419,7 @@ final class Admin_Controller {
 				"SELECT b.id, b.uuid, b.status, b.starts_at, b.price, b.currency, b.created_at,
 					CONCAT(c.first_name, ' ', c.last_name) AS customer_name, s.name AS service_name
 				{$from_sql}
-				ORDER BY b.starts_at DESC
+				ORDER BY {$sort_column} DESC
 				LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				...array( $t['bookings'], $t['customers'], $t['services'], ...$values, $per_page, $offset )
 			)
@@ -488,6 +526,10 @@ final class Admin_Controller {
 
 		$settings['configured'] = ! empty( $settings['secret_key_encrypted'] ) || ! empty( $settings['client_secret_encrypted'] );
 
+		if ( 'google-calendar' === $group ) {
+			$settings['connected'] = $this->google_calendar->is_connected();
+		}
+
 		unset( $settings['password_encrypted'], $settings['secret_key_encrypted'], $settings['client_secret_encrypted'], $settings['refresh_token_encrypted'] );
 
 		return new WP_REST_Response( $settings );
@@ -561,5 +603,93 @@ final class Admin_Controller {
 		}
 
 		return new WP_REST_Response( array( 'saved' => false ), 400 );
+	}
+
+	// --- Google Calendar OAuth ----------------------------------------------------
+	//
+	// connect/callback run as a plain admin_init handler rather than REST
+	// routes: both are reached by a real browser navigation (the "Connect"
+	// link, and Google's own redirect back), never by fetch(), and those
+	// carry no X-WP-Nonce. WordPress's REST cookie auth
+	// (rest_cookie_check_errors()) treats any cookie-authenticated REST
+	// request without a nonce as anonymous — a plain navigation would 401 no
+	// matter what the permission_callback says. A normal wp-admin page load
+	// doesn't have that restriction, so this sidesteps it entirely. CSRF
+	// protection between the redirect out and the redirect back is instead a
+	// standard OAuth `state` value, itself a WP nonce.
+
+	private const GCAL_OAUTH_STATE_ACTION = 'appointiva_google_calendar_oauth_state';
+
+	public function maybe_handle_google_calendar_oauth(): void {
+		if ( ! isset( $_GET['page'], $_GET['appointiva_gcal_action'] ) || Admin::PAGE_SLUG !== $_GET['page'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$action = sanitize_key( wp_unslash( $_GET['appointiva_gcal_action'] ) );
+
+		if ( 'connect' === $action ) {
+			$this->start_google_calendar_oauth();
+		} elseif ( 'callback' === $action ) {
+			$this->finish_google_calendar_oauth();
+		}
+	}
+
+	/** Sends the browser to Google's consent screen. */
+	private function start_google_calendar_oauth(): void {
+		$url = $this->google_calendar->get_authorize_url( $this->google_calendar_redirect_uri() );
+
+		if ( '' === $url ) {
+			wp_safe_redirect( $this->google_calendar_settings_url( 'missing_client_id' ) );
+			exit;
+		}
+
+		$state = wp_create_nonce( self::GCAL_OAUTH_STATE_ACTION );
+
+		wp_redirect( add_query_arg( 'state', $state, $url ) ); // phpcs:ignore WordPress.Security.SafeRedirect -- external Google URL built from our own stored client_id, not user input.
+		exit;
+	}
+
+	/** Google redirects the admin's browser back here after the consent screen. */
+	private function finish_google_calendar_oauth(): void {
+		$state = isset( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : '';
+
+		if ( ! wp_verify_nonce( $state, self::GCAL_OAUTH_STATE_ACTION ) ) {
+			wp_safe_redirect( $this->google_calendar_settings_url( 'error' ) );
+			exit;
+		}
+
+		$code      = isset( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : '';
+		$connected = '' !== $code && $this->google_calendar->handle_oauth_callback( $code, $this->google_calendar_redirect_uri() );
+
+		wp_safe_redirect( $this->google_calendar_settings_url( $connected ? 'connected' : 'error' ) );
+		exit;
+	}
+
+	public function disconnect_google_calendar(): WP_REST_Response {
+		$settings = Settings_Repository::get( 'google_calendar', array() );
+
+		$settings['refresh_token_encrypted'] = '';
+
+		Settings_Repository::set( 'google_calendar', $settings, true );
+
+		return new WP_REST_Response( array( 'disconnected' => true ) );
+	}
+
+	private function google_calendar_redirect_uri(): string {
+		return add_query_arg(
+			array(
+				'page'                   => Admin::PAGE_SLUG,
+				'appointiva_gcal_action' => 'callback',
+			),
+			admin_url( 'admin.php' )
+		);
+	}
+
+	private function google_calendar_settings_url( string $status ): string {
+		return add_query_arg( 'appointiva_gcal', $status, admin_url( 'admin.php?page=' . Admin::PAGE_SLUG ) );
 	}
 }

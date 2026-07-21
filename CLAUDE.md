@@ -71,6 +71,12 @@ via a hand-rolled Vite config at the plugin root.
   installed Vite version. If you ever touch `vite.config.js`, re-verify by loading the built
   `admin.js`/`admin.css` in a page that already has `window.wp` defined before the script runs —
   that's the condition that exposed the original bug and a normal same-page dev check won't catch it.
+  `Admin\Assets::register()` wraps the array localized as `window.AppointivaAdminConfig` in
+  `apply_filters('appointiva_admin_config', $config)` — added in Phase 4 so Pro's white-label add-on
+  can inject a `brand` object (name/tagline/logo/upsell visibility); unused by Free itself, and
+  `admin-app/src/App.jsx` reads `cfg.brand` with a per-field fallback everywhere "Appointiva" was
+  previously hardcoded (sidebar logo block, header label, the Pro upsell card), so this renders
+  identically when nothing hooks the filter.
 - **GDPR**: `Privacy\GDPR` registers WP core's personal-data exporter/eraser. Uninstall keeps all
   data by default (`uninstall.php`), destructive delete is opt-in via Settings.
 
@@ -119,9 +125,9 @@ testing of the Stripe/PayPal/Google Calendar flows against live sandbox credenti
 gating as the first Pro feature. **Phase 3 is done** (WhatsApp reminders, recurring appointments,
 packages, deposits, two-way calendar sync, the customer self-service dashboard, in-plugin
 translations, and the external integration API — every Phase 3 item in the original task list).
-**Phase 4 in progress** (CSV import/export done; events module, white-label/agency mode, and mobile
-app groundwork not yet started). See `../appointiva-pro/CLAUDE.md` for that work — this file only
-covers
-the Free plugin. The two open decisions (instant-confirm vs. inquiry/offer as a real, user-facing
+**Phase 4 is done** against its original task list (CSV import/export, events with e-tickets,
+white-label branding; mobile app API groundwork closed as already satisfied by the existing external
+API — no new work needed there). See `../appointiva-pro/CLAUDE.md` for that work — this file only
+covers the Free plugin. The two open decisions (instant-confirm vs. inquiry/offer as a real, user-facing
 feature; license server platform: custom vs. WooCommerce vs. Lemon Squeezy/Paddle) are still
 unresolved and should be raised with the user before they'd block further work.

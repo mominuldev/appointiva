@@ -37,16 +37,27 @@ final class Assets {
 			true
 		);
 
-		wp_localize_script(
-			'appointiva-admin',
-			'AppointivaAdminConfig',
+		/**
+		 * Filters the config object localized as `window.AppointivaAdminConfig`.
+		 * Added for white-label branding overrides (Pro): a reseller's brand
+		 * name/tagline/logo aren't in scope for the Free plugin itself, so the
+		 * override lives entirely in Pro's own White_Label_Manager. Free's own
+		 * output is byte-for-byte unchanged when nothing hooks this.
+		 *
+		 * @param array $config
+		 */
+		$config = apply_filters(
+			'appointiva_admin_config',
 			array(
 				'apiUrl'    => esc_url_raw( rest_url( 'appointiva/v1' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 				'assetsUrl' => APPOINTIVA_ASSETS_URL,
+				'adminUrl'  => esc_url_raw( admin_url( 'admin.php' ) ),
 				'version'   => APPOINTIVA_VERSION,
 			)
 		);
+
+		wp_localize_script( 'appointiva-admin', 'AppointivaAdminConfig', $config );
 
 		/**
 		 * Fires after the Free plugin has registered its admin script/style

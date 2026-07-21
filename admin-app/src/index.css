@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Tailwind's preflight is disabled (see tailwind.config.js) so it can't leak
+ * outside .appointiva-admin into the rest of wp-admin. That means wp-admin's
+ * own element-level styles (buttons, inputs, tables) otherwise bleed into
+ * our screens fighting the utility classes below — this scoped mini-reset
+ * closes that gap without touching anything outside our root node.
+ */
+.appointiva-admin,
+.appointiva-admin *,
+.appointiva-admin *::before,
+.appointiva-admin *::after {
+	box-sizing: border-box;
+}
+
+.appointiva-admin {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+.appointiva-admin h1,
+.appointiva-admin h2,
+.appointiva-admin h3,
+.appointiva-admin p,
+.appointiva-admin ul {
+	margin: 0;
+	padding: 0;
+}
+
+.appointiva-admin ul {
+	list-style: none;
+}
+
+.appointiva-admin a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.appointiva-admin button {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.appointiva-admin input,
+.appointiva-admin select,
+.appointiva-admin textarea {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	box-shadow: none;
+}
+
+.appointiva-admin table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.appointiva-admin ::selection {
+	background-color: #d2ccff;
+}
+
+.appointiva-admin *:focus {
+	outline: none;
+}
+
+.appointiva-admin *:focus-visible {
+	outline: 2px solid #7c4dff;
+	outline-offset: 2px;
+}
+
+.appointiva-scrollbar::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+.appointiva-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.appointiva-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #e2e0f7;
+	border-radius: 999px;
+}
+
+@keyframes appointiva-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.appointiva-animate-in {
+	animation: appointiva-fade-in 0.2s ease-out;
+}

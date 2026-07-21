@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "appointiva/booking-widget",
+	"title": "Appointiva Booking Widget",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "Embed the Appointiva appointment booking form.",
+	"keywords": [ "booking", "appointment", "calendar", "schedule" ],
+	"textdomain": "appointiva",
+	"attributes": {
+		"serviceId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php"
+}

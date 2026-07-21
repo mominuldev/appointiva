@@ -1,0 +1,23 @@
+{
+	"name": "appointiva",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Appointiva admin app and frontend build pipeline.",
+	"scripts": {
+		"dev": "vite build --watch --mode development",
+		"build": "vite build && mv assets/dist/admin/style.css assets/dist/admin/admin.css",
+		"i18n:pot": "wp i18n make-pot . languages/appointiva.pot --domain=appointiva --exclude=node_modules,vendor,admin-app,assets/dist"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-react": "^4.3.0",
+		"autoprefixer": "^10.4.19",
+		"postcss": "^8.4.38",
+		"tailwindcss": "^3.4.4",
+		"vite": "^5.3.1"
+	},
+	"dependencies": {
+		"lucide-react": "^1.25.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	}
+}

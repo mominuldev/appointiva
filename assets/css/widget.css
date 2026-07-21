@@ -1,0 +1,604 @@
+.appointiva-widget {
+	--appointiva-bg: #ffffff;
+	--appointiva-fg: #1e1b2e;
+	--appointiva-muted: #6b7280;
+	--appointiva-border: #e5e7eb;
+	--appointiva-accent: #6366f1;
+	--appointiva-accent-2: #a855f7;
+	--appointiva-accent-fg: #ffffff;
+	--appointiva-error: #dc2626;
+	--appointiva-success: #16a34a;
+	--appointiva-bg-subtle: #f6f7fb;
+	--appointiva-shadow: rgba( 99, 102, 241, 0.18 );
+	--appointiva-gradient: linear-gradient( 135deg, var( --appointiva-accent ), var( --appointiva-accent-2 ) );
+
+	background: var( --appointiva-bg );
+	color: var( --appointiva-fg );
+	border: 1px solid var( --appointiva-border );
+	border-radius: 20px;
+	padding: 1.75rem;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 1rem;
+	line-height: 1.5;
+	box-shadow: 0 24px 48px -28px var( --appointiva-shadow );
+}
+
+/*
+ * Theme mode: "auto" (default, no explicit attribute) follows the OS via the
+ * media query below. "light"/"dark" are explicit admin choices and must win
+ * regardless of OS preference, so they're expressed as attribute selectors —
+ * higher specificity than the plain-class media query rule below, so source
+ * order doesn't matter.
+ */
+@media ( prefers-color-scheme: dark ) {
+	.appointiva-widget[data-appointiva-theme='auto'],
+	.appointiva-widget:not( [data-appointiva-theme] ) {
+		--appointiva-bg: #16121f;
+		--appointiva-fg: #f1eefc;
+		--appointiva-muted: #a5a0c2;
+		--appointiva-border: #33294d;
+		--appointiva-accent: #818cf8;
+		--appointiva-accent-2: #c084fc;
+		--appointiva-accent-fg: #14101f;
+		--appointiva-error: #f87171;
+		--appointiva-success: #4ade80;
+		--appointiva-bg-subtle: #201a30;
+		--appointiva-shadow: rgba( 129, 140, 248, 0.28 );
+	}
+}
+
+.appointiva-widget[data-appointiva-theme='dark'] {
+	--appointiva-bg: #16121f;
+	--appointiva-fg: #f1eefc;
+	--appointiva-muted: #a5a0c2;
+	--appointiva-border: #33294d;
+	--appointiva-accent: #818cf8;
+	--appointiva-accent-2: #c084fc;
+	--appointiva-accent-fg: #14101f;
+	--appointiva-error: #f87171;
+	--appointiva-success: #4ade80;
+	--appointiva-bg-subtle: #201a30;
+	--appointiva-shadow: rgba( 129, 140, 248, 0.28 );
+}
+
+.appointiva-widget__status {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect( 0 0 0 0 );
+	white-space: nowrap;
+}
+
+.appointiva-widget__body {
+	min-height: 300px;
+}
+
+.appointiva-widget__field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	margin-block-end: 1rem;
+}
+
+.appointiva-widget__field--checkbox {
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+
+.appointiva-widget label {
+	font-weight: 600;
+	font-size: 0.875rem;
+}
+
+.appointiva-widget input[type="text"],
+.appointiva-widget input[type="email"],
+.appointiva-widget input[type="tel"],
+.appointiva-widget select,
+.appointiva-widget textarea {
+	background: var( --appointiva-bg );
+	color: var( --appointiva-fg );
+	border: 1px solid var( --appointiva-border );
+	border-radius: 10px;
+	padding: 0.625rem 0.875rem;
+	font-size: 1rem;
+	inline-size: 100%;
+	box-sizing: border-box;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.appointiva-widget input[type="text"]:focus,
+.appointiva-widget input[type="email"]:focus,
+.appointiva-widget input[type="tel"]:focus,
+.appointiva-widget select:focus,
+.appointiva-widget textarea:focus {
+	border-color: var( --appointiva-accent );
+	box-shadow: 0 0 0 3px var( --appointiva-shadow );
+}
+
+.appointiva-widget input:focus-visible,
+.appointiva-widget select:focus-visible,
+.appointiva-widget textarea:focus-visible,
+.appointiva-widget button:focus-visible {
+	outline: 2px solid var( --appointiva-accent );
+	outline-offset: 2px;
+}
+
+.appointiva-widget__honeypot {
+	position: absolute;
+	inset-inline-start: -9999px;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+}
+
+/* Progress indicator */
+.appointiva-widget__progress {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.appointiva-widget__progress-step {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex: none;
+}
+
+.appointiva-widget__progress-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	font-size: 0.8rem;
+	font-weight: 700;
+	color: var( --appointiva-muted );
+	border: 2px solid var( --appointiva-border );
+	background: var( --appointiva-bg );
+	transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.appointiva-widget__progress-label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var( --appointiva-muted );
+	white-space: nowrap;
+}
+
+.appointiva-widget__progress-step--current .appointiva-widget__progress-badge {
+	background: var( --appointiva-gradient );
+	border-color: transparent;
+	color: var( --appointiva-accent-fg );
+	box-shadow: 0 0 0 4px var( --appointiva-shadow );
+}
+
+.appointiva-widget__progress-step--current .appointiva-widget__progress-label {
+	color: var( --appointiva-fg );
+}
+
+.appointiva-widget__progress-step--done .appointiva-widget__progress-badge {
+	background: var( --appointiva-accent );
+	border-color: var( --appointiva-accent );
+	color: var( --appointiva-accent-fg );
+}
+
+.appointiva-widget__progress-line {
+	flex: 1;
+	height: 2px;
+	min-width: 1.5rem;
+	background: var( --appointiva-border );
+	border-radius: 2px;
+	transition: background 0.3s ease;
+}
+
+.appointiva-widget__progress-line--done {
+	background: var( --appointiva-gradient );
+}
+
+/* Booking layout */
+.appointiva-widget__booking-layout {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Calendar styles */
+.appointiva-widget__calendar-container {
+	margin-top: 0.5rem;
+}
+
+.appointiva-widget__calendar-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+	padding: 0.375rem;
+	background: var( --appointiva-bg-subtle );
+	border-radius: 999px;
+}
+
+.appointiva-widget__calendar-nav {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	background: var( --appointiva-bg );
+	border: 1px solid var( --appointiva-border );
+	border-radius: 50%;
+	font-size: 1.1rem;
+	cursor: pointer;
+	color: var( --appointiva-fg );
+}
+
+.appointiva-widget__calendar-nav:hover:not( :disabled ) {
+	background: var( --appointiva-gradient );
+	color: var( --appointiva-accent-fg );
+	border-color: transparent;
+}
+
+.appointiva-widget__calendar-nav:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.appointiva-widget__calendar-month {
+	text-align: center;
+	flex: 1;
+	font-size: 0.9rem;
+}
+
+.appointiva-widget__calendar-grid {
+	display: grid;
+	grid-template-columns: repeat( 7, 1fr );
+	gap: 4px;
+	text-align: center;
+}
+
+.appointiva-widget__calendar-day-header {
+	font-size: 0.7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var( --appointiva-muted );
+	padding: 0.25rem 0 0.5rem;
+}
+
+.appointiva-widget__calendar-day,
+.appointiva-widget__calendar-day-empty {
+	aspect-ratio: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.85rem;
+}
+
+.appointiva-widget__calendar-day {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 50%;
+	cursor: pointer;
+	color: var( --appointiva-muted );
+	transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.appointiva-widget__calendar-day:disabled {
+	cursor: not-allowed;
+	opacity: 0.4;
+}
+
+.appointiva-widget__calendar-day--available {
+	color: var( --appointiva-fg );
+	font-weight: 600;
+	background: var( --appointiva-bg-subtle );
+}
+
+.appointiva-widget__calendar-day--available:hover:not( :disabled ) {
+	background: var( --appointiva-gradient );
+	color: var( --appointiva-accent-fg );
+	transform: translateY( -1px );
+}
+
+.appointiva-widget__calendar-day--selected {
+	background: var( --appointiva-gradient );
+	color: var( --appointiva-accent-fg );
+	font-weight: 700;
+	box-shadow: 0 6px 16px -6px var( --appointiva-shadow );
+	transform: scale( 1.05 );
+}
+
+/* Loading skeleton */
+.appointiva-widget__skeleton {
+	height: 280px;
+	border-radius: 16px;
+	background: linear-gradient( 90deg, var( --appointiva-bg-subtle ) 25%, var( --appointiva-border ) 37%, var( --appointiva-bg-subtle ) 63% );
+	background-size: 400% 100%;
+	animation: appointiva-shimmer 1.4s ease infinite;
+}
+
+@keyframes appointiva-shimmer {
+	0% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0 50%;
+	}
+}
+
+/* Time slot panel (revealed below the calendar once a date is picked) */
+.appointiva-widget__timeslots-container {
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.4s ease;
+}
+
+.appointiva-widget__timeslots-container.is-visible {
+	max-height: 640px;
+	opacity: 1;
+	margin-top: 1.25rem;
+}
+
+.appointiva-widget__timeslots-heading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem;
+	margin-bottom: 0.75rem;
+	padding-top: 1.25rem;
+	border-top: 1px dashed var( --appointiva-border );
+}
+
+.appointiva-widget__timeslots-label {
+	font-weight: 700;
+	font-size: 0.95rem;
+}
+
+.appointiva-widget__timeslots-date {
+	font-size: 0.8rem;
+	color: var( --appointiva-muted );
+}
+
+.appointiva-widget__time-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.appointiva-widget__time-slot {
+	background: var( --appointiva-bg );
+	color: var( --appointiva-fg );
+	border: 1px solid var( --appointiva-border );
+	border-radius: 999px;
+	padding: 0.55rem 1.1rem;
+	font-size: 0.85rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.appointiva-widget__time-slot:hover:not( :disabled ) {
+	border-color: var( --appointiva-accent );
+	transform: translateY( -1px );
+}
+
+.appointiva-widget__time-slot--selected {
+	background: var( --appointiva-gradient );
+	color: var( --appointiva-accent-fg );
+	border-color: transparent;
+	box-shadow: 0 6px 16px -6px var( --appointiva-shadow );
+}
+
+.appointiva-widget__time-slot--selected::before {
+	content: "✓ ";
+}
+
+/* Summary */
+.appointiva-widget__summary {
+	padding: 1rem 1.1rem;
+	margin-bottom: 1.25rem;
+	background: var( --appointiva-bg-subtle );
+	border-radius: 14px;
+	border-inline-start: 3px solid var( --appointiva-accent );
+}
+
+.appointiva-widget__summary strong {
+	display: block;
+	margin-bottom: 0.5rem;
+	background: var( --appointiva-gradient );
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.appointiva-widget__summary p {
+	margin: 0.25rem 0;
+	font-size: 0.875rem;
+}
+
+/* Footer navigation */
+.appointiva-widget__footer {
+	margin-top: 1.5rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var( --appointiva-border );
+}
+
+.appointiva-widget__footer-inner {
+	display: flex;
+	gap: 0.75rem;
+	justify-content: space-between;
+}
+
+.appointiva-widget__btn {
+	flex: 1;
+	padding: 0.75rem 1rem;
+	font-size: 1rem;
+	font-weight: 600;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease, background-color 0.15s ease;
+}
+
+.appointiva-widget__btn--primary {
+	background: var( --appointiva-gradient );
+	color: var( --appointiva-accent-fg );
+	border: none;
+	box-shadow: 0 10px 24px -10px var( --appointiva-shadow );
+}
+
+.appointiva-widget__btn--primary:hover:not( :disabled ) {
+	transform: translateY( -2px );
+	box-shadow: 0 14px 28px -10px var( --appointiva-shadow );
+}
+
+.appointiva-widget__btn--secondary {
+	background: var( --appointiva-bg );
+	color: var( --appointiva-fg );
+	border: 1px solid var( --appointiva-border );
+}
+
+.appointiva-widget__btn--secondary:hover:not( :disabled ) {
+	background: var( --appointiva-bg-subtle );
+}
+
+.appointiva-widget__btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+/* Utility classes */
+.appointiva-widget__text-muted {
+	color: var( --appointiva-muted );
+	text-align: center;
+	padding: 1rem;
+	font-size: 0.875rem;
+}
+
+.appointiva-widget__info {
+	color: var( --appointiva-accent );
+	background: var( --appointiva-bg-subtle );
+	padding: 0.75rem;
+	border-radius: 10px;
+	text-align: center;
+	margin: 0;
+}
+
+.appointiva-widget__error {
+	color: var( --appointiva-error );
+	text-align: center;
+	padding: 0.75rem;
+	margin: 1rem 0;
+}
+
+.appointiva-widget__success {
+	text-align: center;
+	padding: 2rem 1rem 1rem;
+	animation: appointiva-success-fade-in 0.35s ease both;
+}
+
+.appointiva-widget__success-text {
+	color: var( --appointiva-success );
+	font-weight: 600;
+	margin: 0;
+}
+
+.appointiva-widget__success-icon {
+	width: 76px;
+	height: 76px;
+	display: block;
+	margin: 0 auto 1.25rem;
+	overflow: visible;
+}
+
+.appointiva-widget__success-icon-circle {
+	stroke: var( --appointiva-success );
+	stroke-width: 3;
+	stroke-linecap: round;
+	stroke-dasharray: 152;
+	stroke-dashoffset: 152;
+	transform-origin: center;
+	animation: appointiva-success-circle 0.5s cubic-bezier( 0.65, 0, 0.45, 1 ) forwards;
+}
+
+.appointiva-widget__success-icon-check {
+	stroke: var( --appointiva-success );
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-dasharray: 36;
+	stroke-dashoffset: 36;
+	animation: appointiva-success-check 0.35s cubic-bezier( 0.65, 0, 0.45, 1 ) 0.5s forwards;
+}
+
+@keyframes appointiva-success-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY( 8px );
+	}
+	to {
+		opacity: 1;
+		transform: translateY( 0 );
+	}
+}
+
+@keyframes appointiva-success-circle {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+@keyframes appointiva-success-check {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+/* Responsive adjustments */
+@media ( max-width: 480px ) {
+	.appointiva-widget {
+		padding: 1.25rem;
+		border-radius: 16px;
+	}
+
+	.appointiva-widget__progress-label {
+		font-size: 0.7rem;
+	}
+
+	.appointiva-widget__footer-inner {
+		flex-direction: column-reverse;
+	}
+
+	.appointiva-widget__btn {
+		width: 100%;
+	}
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	.appointiva-widget__calendar-day,
+	.appointiva-widget__calendar-nav,
+	.appointiva-widget__time-slot,
+	.appointiva-widget__btn,
+	.appointiva-widget__progress-badge,
+	.appointiva-widget__progress-line,
+	.appointiva-widget__timeslots-container {
+		transition: none;
+	}
+
+	.appointiva-widget__skeleton {
+		animation: none;
+	}
+
+	.appointiva-widget__success,
+	.appointiva-widget__success-icon-circle,
+	.appointiva-widget__success-icon-check {
+		animation: none;
+		stroke-dashoffset: 0;
+	}
+}

@@ -1,0 +1,360 @@
+# Copyright (C) 2026 Appointiva
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Appointiva 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/appointiva\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-18T19:24:21+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: appointiva\n"
+
+#. Plugin Name of the plugin
+#. Author of the plugin
+#: appointiva.php
+#: src/Admin/Admin.php:27
+#: src/Admin/Admin.php:28
+msgid "Appointiva"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: appointiva.php
+msgid "https://appointiva.com"
+msgstr ""
+
+#. Description of the plugin
+#: appointiva.php
+msgid "Appointment and service booking for salons, consultants, tutors, clinics, and service businesses. Multilingual, RTL-ready, and accessible out of the box."
+msgstr ""
+
+#: appointiva.php:45
+msgid "Appointiva: Composer dependencies are missing. Run `composer install` in the plugin directory."
+msgstr ""
+
+#: src/Activator.php:49
+msgid "Main Location"
+msgstr ""
+
+#: src/Admin/Admin.php:49
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: src/Admin/Assets.php:71
+msgid "Appointiva: the admin app has not been built yet. Run `npm install && npm run build` in the plugin directory."
+msgstr ""
+
+#: src/Booking/Booking_Manager.php:44
+msgid "This service is not available."
+msgstr ""
+
+#: src/Booking/Booking_Manager.php:48
+msgid "Please confirm you agree to the storage of your booking details."
+msgstr ""
+
+#: src/Booking/Booking_Manager.php:56
+msgid "This time slot is no longer available. Please choose another."
+msgstr ""
+
+#: src/Booking/Booking_Manager.php:128
+msgid "Booking not found."
+msgstr ""
+
+#. translators: 1: current status label, 2: target status label
+#: src/Booking/Booking_Manager.php:137
+#, php-format
+msgid "Cannot move a booking from %1$s to %2$s."
+msgstr ""
+
+#: src/Booking/Status.php:99
+msgid "Pending"
+msgstr ""
+
+#: src/Booking/Status.php:100
+msgid "Offer Sent"
+msgstr ""
+
+#: src/Booking/Status.php:101
+msgid "Confirmed"
+msgstr ""
+
+#: src/Booking/Status.php:102
+msgid "Declined"
+msgstr ""
+
+#: src/Booking/Status.php:103
+msgid "Cancelled"
+msgstr ""
+
+#: src/Booking/Status.php:104
+msgid "Completed"
+msgstr ""
+
+#: src/Booking/Status.php:105
+msgid "No-show"
+msgstr ""
+
+#: src/Booking/Status.php:106
+msgid "Expired"
+msgstr ""
+
+#: src/Frontend/Assets.php:45
+msgid "Select a service"
+msgstr ""
+
+#: src/Frontend/Assets.php:46
+msgid "Select a time"
+msgstr ""
+
+#: src/Frontend/Assets.php:47
+msgid "First name"
+msgstr ""
+
+#: src/Frontend/Assets.php:48
+msgid "Last name"
+msgstr ""
+
+#: src/Frontend/Assets.php:49
+#: src/Privacy/GDPR.php:61
+msgid "Email"
+msgstr ""
+
+#: src/Frontend/Assets.php:50
+#: src/Privacy/GDPR.php:62
+msgid "Phone"
+msgstr ""
+
+#: src/Frontend/Assets.php:51
+#: src/Privacy/GDPR.php:77
+msgid "Notes"
+msgstr ""
+
+#: src/Frontend/Assets.php:52
+msgid "I agree to the storage of my details to process this booking."
+msgstr ""
+
+#: src/Frontend/Assets.php:53
+msgid "Book appointment"
+msgstr ""
+
+#: src/Frontend/Assets.php:54
+msgid "Booking..."
+msgstr ""
+
+#: src/Frontend/Assets.php:55
+msgid "Your booking is confirmed. Check your email for details."
+msgstr ""
+
+#: src/Frontend/Assets.php:56
+msgid "No available times in this range."
+msgstr ""
+
+#: src/Frontend/Assets.php:57
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: src/Frontend/Widget_Renderer.php:23
+msgid "Appointment booking form"
+msgstr ""
+
+#: src/Frontend/Widget_Renderer.php:39
+msgid "Please enable JavaScript to book an appointment, or contact us directly."
+msgstr ""
+
+#: src/Frontend/Widget_Renderer.php:42
+msgid "Loading booking form…"
+msgstr ""
+
+#. translators: %s: booking reference
+#: src/Integrations/Google_Calendar.php:123
+#, php-format
+msgid "Appointment #%s"
+msgstr ""
+
+#: src/Notifications/Channels/Email_Channel.php:49
+msgid "Your booking is confirmed"
+msgstr ""
+
+#: src/Notifications/Channels/Email_Channel.php:50
+msgid "Reminder: your upcoming appointment"
+msgstr ""
+
+#: src/Notifications/Channels/Email_Channel.php:51
+msgid "Your booking has been cancelled"
+msgstr ""
+
+#: src/Payments/Gateways/PayPal_Gateway.php:29
+msgid "PayPal"
+msgstr ""
+
+#: src/Payments/Gateways/PayPal_Gateway.php:40
+msgid "PayPal is not configured correctly."
+msgstr ""
+
+#: src/Payments/Gateways/PayPal_Gateway.php:166
+msgid "PayPal payment could not be started."
+msgstr ""
+
+#: src/Payments/Gateways/Stripe_Gateway.php:32
+msgid "Stripe (cards)"
+msgstr ""
+
+#: src/Payments/Gateways/Stripe_Gateway.php:131
+msgid "Stripe payment could not be started."
+msgstr ""
+
+#: src/Privacy/GDPR.php:27
+#: src/Privacy/GDPR.php:36
+#: src/Privacy/GDPR.php:71
+msgid "Appointiva Bookings"
+msgstr ""
+
+#: src/Privacy/GDPR.php:57
+msgid "Appointiva Customer Record"
+msgstr ""
+
+#: src/Privacy/GDPR.php:60
+msgid "Name"
+msgstr ""
+
+#: src/Privacy/GDPR.php:74
+#: templates/emails/booking-cancellation.php:34
+#: templates/emails/booking-confirmation.php:34
+#: templates/emails/booking-reminder.php:34
+msgid "Reference"
+msgstr ""
+
+#: src/Privacy/GDPR.php:75
+msgid "Starts at"
+msgstr ""
+
+#: src/Privacy/GDPR.php:76
+msgid "Status"
+msgstr ""
+
+#: src/Privacy/GDPR.php:110
+msgid "Redacted"
+msgstr ""
+
+#: src/Privacy/GDPR.php:123
+msgid "Personal details were redacted. Payment records are retained for accounting purposes."
+msgstr ""
+
+#: src/Rest/Admin_Controller.php:179
+msgid "No valid fields provided."
+msgstr ""
+
+#: src/Rest/Admin_Controller.php:257
+msgid "Invalid availability payload."
+msgstr ""
+
+#: src/Rest/Admin_Controller.php:312
+msgid "Invalid status."
+msgstr ""
+
+#: src/Rest/Public_Controller.php:96
+msgid "Invalid date range."
+msgstr ""
+
+#: src/Rest/Public_Controller.php:105
+msgid "Submission rejected."
+msgstr ""
+
+#. translators: %s: field name
+#: src/Rest/Public_Controller.php:115
+#, php-format
+msgid "Missing required field: %s"
+msgstr ""
+
+#: src/Rest/Public_Controller.php:122
+msgid "Please provide a valid email address."
+msgstr ""
+
+#. translators: %s: customer first name
+#: templates/emails/booking-cancellation.php:22
+#, php-format
+msgid "Your booking was cancelled, %s"
+msgstr ""
+
+#: templates/emails/booking-cancellation.php:27
+msgid "The following appointment has been cancelled:"
+msgstr ""
+
+#: templates/emails/booking-cancellation.php:30
+#: templates/emails/booking-confirmation.php:30
+#: templates/emails/booking-reminder.php:30
+msgid "Date & time"
+msgstr ""
+
+#. translators: %s: customer first name
+#: templates/emails/booking-confirmation.php:22
+#, php-format
+msgid "You're confirmed, %s!"
+msgstr ""
+
+#: templates/emails/booking-confirmation.php:27
+msgid "Here are your appointment details:"
+msgstr ""
+
+#. translators: %s: customer first name
+#: templates/emails/booking-reminder.php:22
+#, php-format
+msgid "See you soon, %s"
+msgstr ""
+
+#: templates/emails/booking-reminder.php:27
+msgid "This is a reminder about your upcoming appointment:"
+msgstr ""
+
+#. translators: %s: site name
+#: templates/emails/partials/footer.php:17
+#, php-format
+msgid "This email was sent by %s."
+msgstr ""
+
+#: blocks/booking-widget/index.js:22
+msgid "Booking Widget Settings"
+msgstr ""
+
+#: blocks/booking-widget/index.js:24
+msgid "Service ID (optional)"
+msgstr ""
+
+#: blocks/booking-widget/index.js:25
+msgid "Leave empty to let visitors pick from all active services."
+msgstr ""
+
+#: blocks/booking-widget/block.json
+msgctxt "block title"
+msgid "Appointiva Booking Widget"
+msgstr ""
+
+#: blocks/booking-widget/block.json
+msgctxt "block description"
+msgid "Embed the Appointiva appointment booking form."
+msgstr ""
+
+#: blocks/booking-widget/block.json
+msgctxt "block keyword"
+msgid "booking"
+msgstr ""
+
+#: blocks/booking-widget/block.json
+msgctxt "block keyword"
+msgid "appointment"
+msgstr ""
+
+#: blocks/booking-widget/block.json
+msgctxt "block keyword"
+msgid "calendar"
+msgstr ""
+
+#: blocks/booking-widget/block.json
+msgctxt "block keyword"
+msgid "schedule"
+msgstr ""

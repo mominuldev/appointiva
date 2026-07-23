@@ -3,7 +3,7 @@
  * Plugin Name:       Appointiva
  * Plugin URI:        https://appointiva.com
  * Description:       Appointment and service booking for salons, consultants, tutors, clinics, and service businesses. Multilingual, RTL-ready, and accessible out of the box.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.5
  * Requires PHP:      8.1
  * Author:            Appointiva
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants. APPOINTIVA_ is this plugin's exclusive prefix across constants, options, hooks, tables, and handles.
-define( 'APPOINTIVA_VERSION', '1.0.0' );
+define( 'APPOINTIVA_VERSION', '1.0.1' );
 define( 'APPOINTIVA_DB_VERSION', '1.0.1' );
 define( 'APPOINTIVA_PLUGIN_FILE', __FILE__ );
 define( 'APPOINTIVA_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );

@@ -658,15 +658,35 @@
 			} );
 	};
 
-	function boot() {
-		var roots = document.querySelectorAll( '[data-appointiva-widget]' );
-		Array.prototype.forEach.call( roots, function ( root ) {
-			new Widget( root );
-		} );
+	// Idempotent: a container is only ever hydrated once, so re-scanning the
+	// page (or the same subtree) is always safe.
+	function mount( root ) {
+		if ( ! root || root.appointivaMounted ) {
+			return;
+		}
+		root.appointivaMounted = true;
+		new Widget( root );
 	}
 
+	function boot( context ) {
+		var scope = context && context.querySelectorAll ? context : document;
+		var roots = scope.querySelectorAll( '[data-appointiva-widget]' );
+		Array.prototype.forEach.call( roots, mount );
+	}
+
+	// Public API. Free still auto-boots every container on DOMContentLoaded
+	// exactly as before; this additionally lets containers injected *after*
+	// initial load — AJAX, popups, or a page builder's live editor (e.g.
+	// Appointiva Pro's Elementor widget) — be hydrated on demand. boot() accepts
+	// an optional context element to limit the scan to one subtree.
+	window.Appointiva = window.Appointiva || {};
+	window.Appointiva.boot = boot;
+	window.Appointiva.mount = mount;
+
 	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', boot );
+		document.addEventListener( 'DOMContentLoaded', function () {
+			boot();
+		} );
 	} else {
 		boot();
 	}

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointiva &amp; Appointiva Pro — Documentation</title>
+<style>
+:root{
+  --bg:#f7f8fb;
+  --surface:#ffffff;
+  --surface-2:#f1f3f9;
+  --text:#1a2233;
+  --text-soft:#5a6478;
+  --text-faint:#8a93a6;
+  --border:#e5e8f0;
+  --brand:#5b4ff2;
+  --brand-2:#8b5cf6;
+  --brand-soft:#eef0fe;
+  --pro:#e0a021;
+  --pro-soft:#fdf5e3;
+  --pro-border:#f3dfa8;
+  --ok:#1f9d6b;
+  --ok-soft:#e6f6ef;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(20,25,40,.04),0 8px 24px rgba(20,25,40,.06);
+  --shadow-lg:0 12px 40px rgba(20,25,40,.12);
+  --maxw:1180px;
+  --sidebar:264px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0e1118;
+    --surface:#161b26;
+    --surface-2:#1d2432;
+    --text:#e8ecf4;
+    --text-soft:#a6b0c3;
+    --text-faint:#6f7b91;
+    --border:#28313f;
+    --brand:#8b83ff;
+    --brand-2:#a78bfa;
+    --brand-soft:#20233a;
+    --pro:#f0bd54;
+    --pro-soft:#2a2416;
+    --pro-border:#4a3f1f;
+    --ok:#4cc38a;
+    --ok-soft:#16281f;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    --shadow-lg:0 12px 40px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1118;--surface:#161b26;--surface-2:#1d2432;--text:#e8ecf4;--text-soft:#a6b0c3;--text-faint:#6f7b91;--border:#28313f;--brand:#8b83ff;--brand-2:#a78bfa;--brand-soft:#20233a;--pro:#f0bd54;--pro-soft:#2a2416;--pro-border:#4a3f1f;--ok:#4cc38a;--ok-soft:#16281f;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);--shadow-lg:0 12px 40px rgba(0,0,0,.5);
+}
+:root[data-theme="light"]{
+  --bg:#f7f8fb;--surface:#ffffff;--surface-2:#f1f3f9;--text:#1a2233;--text-soft:#5a6478;--text-faint:#8a93a6;--border:#e5e8f0;--brand:#5b4ff2;--brand-2:#8b5cf6;--brand-soft:#eef0fe;--pro:#e0a021;--pro-soft:#fdf5e3;--pro-border:#f3dfa8;--ok:#1f9d6b;--ok-soft:#e6f6ef;--shadow:0 1px 2px rgba(20,25,40,.04),0 8px 24px rgba(20,25,40,.06);--shadow-lg:0 12px 40px rgba(20,25,40,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;font-size:16px;
+}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-inner{
+  max-width:var(--maxw);margin:0 auto;padding:12px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em}
+.brand-mark{
+  width:30px;height:30px;border-radius:8px;flex:none;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:16px;
+}
+.topbar .spacer{flex:1}
+.topbar-links{display:flex;gap:4px;align-items:center}
+.topbar-links a{
+  color:var(--text-soft);font-size:14px;font-weight:500;
+  padding:7px 12px;border-radius:8px;
+}
+.topbar-links a:hover{background:var(--surface-2);color:var(--text);text-decoration:none}
+.theme-toggle{
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);
+  width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:16px;
+  display:grid;place-items:center;
+}
+.theme-toggle:hover{color:var(--text)}
+.menu-btn{display:none;border:1px solid var(--border);background:var(--surface-2);color:var(--text);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:18px}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(900px 400px at 80% -10%,color-mix(in srgb,var(--brand) 22%,transparent),transparent 70%),
+    radial-gradient(700px 400px at 5% 0%,color-mix(in srgb,var(--brand-2) 16%,transparent),transparent 60%);
+  border-bottom:1px solid var(--border);
+}
+.hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px;text-align:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-soft);font-size:13px;font-weight:600;
+  padding:6px 14px;border-radius:999px;box-shadow:var(--shadow);
+}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.hero h1{
+  font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.08;letter-spacing:-.03em;
+  margin:22px 0 0;font-weight:800;
+}
+.hero h1 .grad{
+  background:linear-gradient(120deg,var(--brand),var(--brand-2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p.lede{
+  max-width:640px;margin:20px auto 0;font-size:1.15rem;color:var(--text-soft);
+}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;
+  padding:12px 22px;border-radius:11px;cursor:pointer;border:1px solid transparent;
+}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{text-decoration:none;filter:brightness(1.06)}
+.btn-ghost{background:var(--surface);border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{text-decoration:none;background:var(--surface-2)}
+.hero-stats{
+  display:flex;gap:36px;justify-content:center;flex-wrap:wrap;margin-top:44px;
+}
+.hero-stats .stat{text-align:center}
+.hero-stats .num{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(120deg,var(--brand),var(--brand-2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stats .lbl{font-size:13px;color:var(--text-faint);font-weight:500}
+
+/* ---------- Layout ---------- */
+.layout{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;gap:40px;align-items:flex-start}
+.sidebar{
+  width:var(--sidebar);flex:none;position:sticky;top:74px;
+  align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;
+  padding:32px 0;
+}
+.sidebar h4{
+  font-size:11px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--text-faint);font-weight:700;margin:20px 0 8px;padding:0 12px;
+}
+.sidebar h4:first-child{margin-top:0}
+.sidebar a{
+  display:block;color:var(--text-soft);font-size:14px;font-weight:500;
+  padding:6px 12px;border-radius:8px;border-left:2px solid transparent;
+}
+.sidebar a:hover{background:var(--surface-2);color:var(--text);text-decoration:none}
+.sidebar a.active{color:var(--brand);background:var(--brand-soft);border-left-color:var(--brand);font-weight:600}
+.content{flex:1;min-width:0;padding:40px 0 80px}
+
+/* ---------- Sections ---------- */
+section{scroll-margin-top:88px;margin-bottom:64px}
+.section-head{margin-bottom:26px}
+.section-tag{
+  display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 11px;border-radius:999px;margin-bottom:12px;
+}
+.tag-free{background:var(--ok-soft);color:var(--ok)}
+.tag-pro{background:var(--pro-soft);color:var(--pro);border:1px solid var(--pro-border)}
+.tag-neutral{background:var(--brand-soft);color:var(--brand)}
+h2.section-title{font-size:1.95rem;letter-spacing:-.02em;font-weight:800;line-height:1.15}
+.section-head p{color:var(--text-soft);margin-top:8px;max-width:70ch}
+h3.sub{font-size:1.25rem;font-weight:700;letter-spacing:-.01em;margin:36px 0 14px;padding-top:8px}
+
+/* ---------- Feature cards ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px;box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.card .ico{
+  width:42px;height:42px;border-radius:11px;display:grid;place-items:center;
+  font-size:21px;margin-bottom:14px;background:var(--brand-soft);
+}
+.card.pro .ico{background:var(--pro-soft)}
+.card h4{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.card p{font-size:14px;color:var(--text-soft);line-height:1.55}
+.pill{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  padding:2px 7px;border-radius:5px;
+}
+.pill-pro{background:var(--pro-soft);color:var(--pro);border:1px solid var(--pro-border)}
+.pill-free{background:var(--ok-soft);color:var(--ok)}
+
+/* ---------- Callouts / steps ---------- */
+.callout{
+  background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--brand);
+  border-radius:10px;padding:16px 18px;margin:18px 0;font-size:14.5px;color:var(--text-soft);
+}
+.callout.pro{border-left-color:var(--pro)}
+.callout strong{color:var(--text)}
+.steps{counter-reset:step;list-style:none;margin:16px 0}
+.steps li{
+  position:relative;padding:0 0 18px 44px;counter-increment:step;
+  border-left:2px solid var(--border);margin-left:14px;
+}
+.steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps li::before{
+  content:counter(step);position:absolute;left:-15px;top:-2px;
+  width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:700;
+}
+.steps li strong{display:block;color:var(--text);font-weight:600;margin-bottom:2px}
+.steps li span{font-size:14px;color:var(--text-soft)}
+code{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:6px;
+  padding:1px 6px;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;color:var(--brand);
+}
+
+/* ---------- Comparison table ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);background:var(--surface)}
+table.compare{width:100%;border-collapse:collapse;min-width:560px;font-size:14.5px}
+table.compare th,table.compare td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--border)}
+table.compare thead th{
+  position:sticky;top:0;background:var(--surface-2);font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.04em;color:var(--text-soft);
+}
+table.compare thead th.col-free{color:var(--ok)}
+table.compare thead th.col-pro{color:var(--pro)}
+table.compare tbody tr:last-child td{border-bottom:none}
+table.compare tbody tr:hover{background:var(--surface-2)}
+table.compare td.feat{font-weight:600;color:var(--text)}
+table.compare td.center{text-align:center;width:130px}
+.check{color:var(--ok);font-weight:700}
+.dash{color:var(--text-faint)}
+.mini{font-size:12.5px;color:var(--text-soft)}
+
+/* ---------- Two-column intro cards ---------- */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px}
+.duo .plan{
+  border-radius:var(--radius);padding:26px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);
+}
+.duo .plan.pro{border-color:var(--pro-border);background:linear-gradient(180deg,var(--pro-soft),var(--surface) 60%)}
+.duo .plan .name{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.duo .plan .price{font-size:14px;color:var(--text-faint);margin-top:2px}
+.duo .plan p{font-size:14.5px;color:var(--text-soft);margin-top:12px}
+.duo .plan ul{list-style:none;margin-top:14px}
+.duo .plan li{font-size:14px;padding:5px 0 5px 24px;position:relative;color:var(--text-soft)}
+.duo .plan li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:700}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--border);background:var(--surface)}
+.footer-inner{max-width:var(--maxw);margin:0 auto;padding:40px 24px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.footer-inner p{font-size:13.5px;color:var(--text-faint)}
+.footer-inner .brand{font-size:15px}
+
+.anchor-note{font-size:13px;color:var(--text-faint);margin-top:6px}
+
+@media (max-width:960px){
+  .sidebar{display:none}
+  .duo{grid-template-columns:1fr}
+  .menu-btn{display:grid;place-items:center}
+  .topbar-links{display:none}
+}
+@media (max-width:560px){
+  .hero-inner{padding:52px 20px 44px}
+  .hero-stats{gap:24px}
+  .content{padding:28px 0 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="brand-mark">A</span> Appointiva <span style="color:var(--text-faint);font-weight:500">Docs</span></div>
+    <div class="spacer"></div>
+    <nav class="topbar-links">
+      <a href="#overview">Overview</a>
+      <a href="#free">Free</a>
+      <a href="#pro">Pro</a>
+      <a href="#compare">Compare</a>
+      <a href="#getting-started">Get started</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">◐</button>
+    <button class="menu-btn" id="menuBtn" title="Menu" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow"><span class="dot"></span> Appointiva v1.0 &nbsp;·&nbsp; Appointiva Pro v1.9</span>
+    <h1>Booking &amp; scheduling,<br><span class="grad">from a single service to a full agency</span></h1>
+    <p class="lede">Everything you need to let visitors book a service and time slot on your WordPress site — plus a Pro add-on that scales it to multiple staff, WhatsApp reminders, packages, events, and more.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#getting-started">Get started →</a>
+      <a class="btn btn-ghost" href="#compare">Compare Free vs Pro</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="num">11</div><div class="lbl">Free features</div></div>
+      <div class="stat"><div class="num">13</div><div class="lbl">Pro features</div></div>
+      <div class="stat"><div class="num">WCAG&nbsp;AA</div><div class="lbl">Accessible widget</div></div>
+      <div class="stat"><div class="num">GDPR</div><div class="lbl">Ready</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LAYOUT ============ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <h4>Start here</h4>
+    <a href="#overview">Overview</a>
+    <a href="#getting-started">Getting started</a>
+    <a href="#compare">Free vs Pro</a>
+
+    <h4>Appointiva (Free)</h4>
+    <a href="#free">What's included</a>
+    <a href="#free-booking">Booking &amp; availability</a>
+    <a href="#free-notify">Notifications &amp; email</a>
+    <a href="#free-pay">Payments</a>
+    <a href="#free-embed">Embedding the widget</a>
+    <a href="#free-privacy">Privacy &amp; GDPR</a>
+
+    <h4>Appointiva Pro</h4>
+    <a href="#pro">What's included</a>
+    <a href="#pro-license">Licensing &amp; updates</a>
+    <a href="#pro-staff">Multi-staff</a>
+    <a href="#pro-whatsapp">WhatsApp reminders</a>
+    <a href="#pro-recurring">Recurring appointments</a>
+    <a href="#pro-packages">Packages</a>
+    <a href="#pro-deposits">Deposits</a>
+    <a href="#pro-calendar">Two-way calendar sync</a>
+    <a href="#pro-dashboard">Customer dashboard</a>
+    <a href="#pro-translations">Translations</a>
+    <a href="#pro-api">External API</a>
+    <a href="#pro-csv">CSV import/export</a>
+    <a href="#pro-events">Events &amp; e-tickets</a>
+    <a href="#pro-whitelabel">White-label branding</a>
+    <a href="#pro-elementor">Elementor widget</a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <div class="section-head">
+        <span class="section-tag tag-neutral">Overview</span>
+        <h2 class="section-title">Two plugins, one booking experience</h2>
+        <p>Appointiva is a free, standalone booking plugin that works on its own. Appointiva Pro is a separate add-on that plugs into Free's extension points to unlock advanced, business-grade features. Pro requires the free plugin to be installed and active.</p>
+      </div>
+
+      <div class="duo">
+        <div class="plan">
+          <div class="name">🗓️ Appointiva <span class="pill pill-free">Free</span></div>
+          <div class="price">Free · WordPress.org · v1.0.0</div>
+          <p>A complete single-staff booking calendar for salons, consultants, tutors, clinics and service businesses. Multilingual, RTL-ready, and accessible out of the box.</p>
+          <ul>
+            <li>Single-service booking calendar</li>
+            <li>Weekly availability &amp; blocked time</li>
+            <li>Automatic confirmation &amp; reminder emails</li>
+            <li>Stripe &amp; PayPal payments</li>
+            <li>Gutenberg block &amp; shortcode</li>
+            <li>GDPR export/erase tools</li>
+          </ul>
+        </div>
+        <div class="plan pro">
+          <div class="name">⭐ Appointiva Pro <span class="pill pill-pro">Pro</span></div>
+          <div class="price">Paid add-on · Requires Free · v1.9.0</div>
+          <p>Everything in Free, extended for teams: multiple staff, WhatsApp, recurring bookings, prepaid packages, deposits, ticketed events, a customer self-service portal, and more.</p>
+          <ul>
+            <li>Multi-staff scheduling</li>
+            <li>WhatsApp reminders</li>
+            <li>Recurring appointments &amp; packages</li>
+            <li>Deposits &amp; two-way calendar sync</li>
+            <li>Events with e-tickets</li>
+            <li>Customer dashboard, API, CSV, white-label</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout"><strong>How they fit together:</strong> Pro never modifies Free's files. It hooks into the actions and filters Free exposes at every step of the booking flow — so when a Pro feature is unlicensed or disabled, Free keeps working exactly as it would on its own (a graceful downgrade, not a hard lock).</div>
+    </section>
+
+    <!-- GETTING STARTED -->
+    <section id="getting-started">
+      <div class="section-head">
+        <span class="section-tag tag-neutral">Getting started</span>
+        <h2 class="section-title">Install and take your first booking</h2>
+        <p>You can be live in a few minutes with just the free plugin. Add Pro later whenever you need the extra capabilities.</p>
+      </div>
+
+      <h3 class="sub">Set up Appointiva (Free)</h3>
+      <ol class="steps">
+        <li><strong>Install &amp; activate</strong><span>Upload the <code>appointiva</code> folder to <code>/wp-content/plugins/</code> (or install from the Plugins screen), then activate it.</span></li>
+        <li><strong>Add a service</strong><span>Go to <strong>Appointiva</strong> in the admin menu, create your first service (name, duration, price), and assign it to a staff member.</span></li>
+        <li><strong>Set your weekly availability</strong><span>Define which days and hours you accept bookings, plus any blocked-off time.</span></li>
+        <li><strong>Embed the booking form</strong><span>Add the <strong>Appointiva Booking Widget</strong> block, or the <code>[appointiva_booking]</code> shortcode, to any page or post.</span></li>
+        <li><strong>Configure email &amp; (optionally) payments</strong><span>Under Notifications set up SMTP for reliable delivery; under Payments add Stripe or PayPal keys if you collect payment.</span></li>
+      </ol>
+
+      <h3 class="sub">Add Appointiva Pro</h3>
+      <ol class="steps">
+        <li><strong>Keep Free active</strong><span>Pro checks that the free plugin is present before it boots — install and activate Appointiva first.</span></li>
+        <li><strong>Install Pro &amp; activate</strong><span>Upload and activate the <code>appointiva-pro</code> plugin alongside Free.</span></li>
+        <li><strong>Enter your license key</strong><span>Open <strong>Appointiva → License</strong> and activate your key. This unlocks the Pro features and enables automatic updates.</span></li>
+        <li><strong>Turn on the features you need</strong><span>Each Pro feature has its own screen or settings tab — enable multi-staff, WhatsApp, deposits, and the rest individually.</span></li>
+      </ol>
+      <div class="callout pro"><strong>Requirements:</strong> WordPress 6.5+ and PHP 8.1+ for both plugins. Pro requires Appointiva (Free) 1.0.0 or newer.</div>
+    </section>
+
+    <!-- ============ FREE ============ -->
+    <section id="free">
+      <div class="section-head">
+        <span class="section-tag tag-free">Appointiva · Free</span>
+        <h2 class="section-title">What's included in the free plugin</h2>
+        <p>Every feature below is fully usable in the free plugin, with no time limits or locked functionality.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card"><div class="ico">📅</div><h4>Booking calendar</h4><p>A single-staff, single-service booking calendar that shows real, conflict-free available time slots to visitors.</p></div>
+        <div class="card"><div class="ico">⏰</div><h4>Availability rules</h4><p>Configurable weekly working hours plus blocked-time rules so you only ever get booked when you're actually free.</p></div>
+        <div class="card"><div class="ico">✉️</div><h4>Email confirmations &amp; reminders</h4><p>Automatic booking confirmation and reminder emails, sent in the customer's own language.</p></div>
+        <div class="card"><div class="ico">📤</div><h4>SMTP delivery</h4><p>One-click SMTP presets for Gmail, Outlook, Yahoo, iCloud and Zoho. Credentials are encrypted (AES-256) before storage.</p></div>
+        <div class="card"><div class="ico">💳</div><h4>Stripe &amp; PayPal</h4><p>Collect payment for bookings through Stripe or PayPal — calling their APIs directly, no bloated SDKs.</p></div>
+        <div class="card"><div class="ico">🔗</div><h4>Google Calendar sync</h4><p>One-way push of every confirmed booking to your Google Calendar so your personal calendar always reflects bookings.</p></div>
+        <div class="card"><div class="ico">🧩</div><h4>Block &amp; shortcode</h4><p>Embed the booking form anywhere with the Gutenberg block or the <code>[appointiva_booking]</code> shortcode.</p></div>
+        <div class="card"><div class="ico">♿</div><h4>Accessible widget</h4><p>A dependency-free booking widget targeting WCAG 2.1 AA — full keyboard navigation and ARIA labeling, no framework required.</p></div>
+        <div class="card"><div class="ico">🌓</div><h4>Light/dark &amp; RTL</h4><p>Calendar and email templates adapt to the visitor's light/dark OS preference, with RTL-aware styling throughout.</p></div>
+        <div class="card"><div class="ico">🛡️</div><h4>GDPR tools</h4><p>Explicit consent checkbox on the form, plus full integration with WordPress's personal-data export and erase tools.</p></div>
+        <div class="card"><div class="ico">🗄️</div><h4>Safe uninstall</h4><p>Uninstalling keeps all your booking data by default; permanent deletion is an explicit opt-in setting.</p></div>
+      </div>
+
+      <h3 class="sub" id="free-booking">Booking &amp; availability</h3>
+      <p style="color:var(--text-soft)">Create a service, set your weekly hours, and the widget computes valid slots for visitors automatically. At the moment a booking is placed, availability is re-checked server-side — so the slot shown as free and the slot actually booked can't drift apart under load.</p>
+      <div class="callout"><strong>Tip:</strong> Blocked-time rules are perfect for lunch breaks, holidays, or one-off closures without changing your recurring weekly hours.</div>
+
+      <h3 class="sub" id="free-notify">Notifications &amp; email</h3>
+      <p style="color:var(--text-soft)">Confirmation and reminder emails are locale-safe — Appointiva switches to the customer's language and reloads the correct translations before sending, something WordPress doesn't do automatically for plugin text domains. For reliable delivery, enable SMTP under <strong>Appointiva → Notifications</strong> and pick a provider preset.</p>
+
+      <h3 class="sub" id="free-pay">Payments</h3>
+      <p style="color:var(--text-soft)">Add Stripe or PayPal credentials under <strong>Appointiva → Payments</strong>. Both gateways talk to their vendor APIs directly over WordPress's HTTP layer. (The payment step is optional — many businesses run booking-only and collect payment in person.)</p>
+
+      <h3 class="sub" id="free-embed">Embedding the widget</h3>
+      <p style="color:var(--text-soft)">Two equivalent ways to place the booking form:</p>
+      <div class="grid" style="margin-top:12px">
+        <div class="card"><div class="ico">🧱</div><h4>Gutenberg block</h4><p>Search for <strong>"Appointiva Booking Widget"</strong> in the block inserter and drop it into any page.</p></div>
+        <div class="card"><div class="ico">〔 〕</div><h4>Shortcode</h4><p>Paste <code>[appointiva_booking]</code> into any post, page, or widget area that accepts shortcodes.</p></div>
+      </div>
+
+      <h3 class="sub" id="free-privacy">Privacy &amp; GDPR</h3>
+      <p style="color:var(--text-soft)">The booking form carries an explicit consent checkbox, and Appointiva registers with WordPress's core personal-data exporter and eraser so subject-access and deletion requests just work. No data is ever sent to an external service until you actively configure and enable an integration (Google Calendar, Stripe, PayPal, or SMTP).</p>
+    </section>
+
+    <!-- ============ PRO ============ -->
+    <section id="pro">
+      <div class="section-head">
+        <span class="section-tag tag-pro">Appointiva · Pro</span>
+        <h2 class="section-title">What's included in Pro</h2>
+        <p>Pro adds fourteen business-grade features. Each one is license-gated and downgrades gracefully — when unlicensed or disabled, Free's own behavior is completely unaffected.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card pro"><div class="ico">👥</div><h4>Multi-staff <span class="pill pill-pro">Pro</span></h4><p>Assign several staff to one service; slots merge across everyone and the right person is picked at booking time.</p></div>
+        <div class="card pro"><div class="ico">💬</div><h4>WhatsApp reminders <span class="pill pill-pro">Pro</span></h4><p>Send confirmations, reminders and cancellations over the WhatsApp Business Cloud API.</p></div>
+        <div class="card pro"><div class="ico">🔁</div><h4>Recurring appointments <span class="pill pill-pro">Pro</span></h4><p>Book a repeating series — "every Tuesday for 8 weeks" — as real, individual bookings.</p></div>
+        <div class="card pro"><div class="ico">🎟️</div><h4>Packages <span class="pill pill-pro">Pro</span></h4><p>Sell a bundle of prepaid sessions up front and redeem them one booking at a time.</p></div>
+        <div class="card pro"><div class="ico">💰</div><h4>Deposits <span class="pill pill-pro">Pro</span></h4><p>Require a fixed or percentage deposit before a booking is confirmed.</p></div>
+        <div class="card pro"><div class="ico">🔄</div><h4>Two-way calendar sync <span class="pill pill-pro">Pro</span></h4><p>External Google Calendar events actually block time from being booked here — not just cosmetic.</p></div>
+        <div class="card pro"><div class="ico">🙋</div><h4>Customer dashboard <span class="pill pill-pro">Pro</span></h4><p>A passwordless self-service portal where customers view and cancel their own bookings.</p></div>
+        <div class="card pro"><div class="ico">🌐</div><h4>Translations <span class="pill pill-pro">Pro</span></h4><p>Translate service names and descriptions per locale for multilingual catalogs.</p></div>
+        <div class="card pro"><div class="ico">🔌</div><h4>External API <span class="pill pill-pro">Pro</span></h4><p>API-key-authenticated REST surface for Zapier, custom apps, or a mobile client.</p></div>
+        <div class="card pro"><div class="ico">📑</div><h4>CSV import/export <span class="pill pill-pro">Pro</span></h4><p>Bulk import and export customers and bookings for migration and reporting.</p></div>
+        <div class="card pro"><div class="ico">🎫</div><h4>Events &amp; e-tickets <span class="pill pill-pro">Pro</span></h4><p>Sell tickets to fixed-time, multi-attendee events with check-in and QR codes.</p></div>
+        <div class="card pro"><div class="ico">🏷️</div><h4>White-label branding <span class="pill pill-pro">Pro</span></h4><p>Rebrand the admin, sidebar and plugin listing with your own name, logo and tagline.</p></div>
+        <div class="card pro"><div class="ico">🔑</div><h4>Licensing &amp; updates <span class="pill pill-pro">Pro</span></h4><p>Key activation with automatic, license-gated plugin updates.</p></div>
+        <div class="card pro"><div class="ico">🎨</div><h4>Elementor widgets <span class="pill pill-pro">Pro</span></h4><p>Native, fully style-able Booking Form and Services dropdown widgets for any Elementor layout.</p></div>
+      </div>
+
+      <h3 class="sub" id="pro-license">Licensing &amp; updates</h3>
+      <p style="color:var(--text-soft)">Activate your license under <strong>Appointiva → License</strong>. Pro re-validates daily and includes a 7-day grace period for transient network failures — but a definitive server rejection (expired or revoked) downgrades immediately. Automatic updates only deliver the download when your key and domain resolve to a currently-active activation.</p>
+      <ol class="steps">
+        <li><strong>Enter your key</strong><span>Paste your license key on the License screen and click Activate.</span></li>
+        <li><strong>Confirm "Active"</strong><span>The panel shows your activation status; updates now flow automatically.</span></li>
+        <li><strong>Manage activations</strong><span>Each license allows a set number of site activations; deactivate a site to free a slot.</span></li>
+      </ol>
+
+      <h3 class="sub" id="pro-staff">Multi-staff scheduling</h3>
+      <p style="color:var(--text-soft)">Assign multiple staff members to a single service. Available slots are merged and de-duplicated across every candidate, and at booking time the system re-checks and assigns the specific staff member who's actually free — closing the gap between "shown as free" and "actually booked." Assignments are managed on the service, license-gated so the endpoint returns a clear error if your license has lapsed.</p>
+
+      <h3 class="sub" id="pro-whatsapp">WhatsApp reminders</h3>
+      <p style="color:var(--text-soft)">WhatsApp becomes an additional notification channel alongside email. Configure it on the Settings screen with your WhatsApp Business phone number ID and access token, then map a pre-approved message template + language for each notification type.</p>
+      <div class="callout pro"><strong>Important:</strong> Business-initiated WhatsApp messages must use a <strong>pre-approved template</strong> from your Meta Business account. Each Appointiva template needs exactly three body placeholders in a fixed order: customer first name, service name, and formatted appointment date/time. Use the built-in <strong>Test</strong> button to confirm your setup works before relying on it.</div>
+
+      <h3 class="sub" id="pro-recurring">Recurring appointments</h3>
+      <p style="color:var(--text-soft)">From the <strong>Recurring</strong> screen, an admin books a repeating series on a customer's behalf (weekly, biweekly, or monthly). Every occurrence is a real booking created through Free's own booking engine, so confirmation emails, staff resolution and conflict checks all apply identically. A conflicting occurrence is recorded as <em>skipped</em> with a reason rather than failing the whole series, and cancelling a series only cancels its future occurrences — past ones are left as history.</p>
+
+      <h3 class="sub" id="pro-packages">Packages</h3>
+      <p style="color:var(--text-soft)">A package is a bundle of N prepaid sessions of one service, sold up front and redeemed one at a time. Each redemption creates a real booking; the purchase auto-transitions to <em>exhausted</em> once every session is used. A failed redemption (e.g. a slot conflict) consumes nothing — the customer never loses a paid session to a scheduling clash. Manage definitions and purchases on the <strong>Packages</strong> screen.</p>
+
+      <h3 class="sub" id="pro-deposits">Deposits</h3>
+      <p style="color:var(--text-soft)">Require a deposit (fixed amount or percentage) before a booking is confirmed. A booking for a deposit-required service lands at <em>pending</em> instead of auto-confirming. From the <strong>Deposits</strong> screen you can mark a deposit paid manually (cash, transfer) or charge it through Stripe/PayPal — the deposit charges less than full price through the same gateway code Free already uses.</p>
+
+      <h3 class="sub" id="pro-calendar">Two-way calendar sync</h3>
+      <p style="color:var(--text-soft)">Free pushes bookings <em>to</em> Google Calendar one-way; Pro completes the loop. It tracks each booking's calendar event (deleting it from Google if the booking is cancelled) and pulls the calendar's busy periods hourly, so an external event — a staff member's personal appointment, a holiday — actually blocks that time from being booked here. The <strong>Calendar Sync</strong> screen shows connection state, last sync time, and a manual "Sync now" button.</p>
+
+      <h3 class="sub" id="pro-dashboard">Customer self-service dashboard</h3>
+      <p style="color:var(--text-soft)">A customer-facing portal that needs no WordPress account. Add the <code>[appointiva_dashboard]</code> shortcode to a page; customers arrive via a pre-authenticated "Manage this booking" link in their confirmation email, or request a magic link by email. From there they can view their bookings, packages and recurring series, and cancel their own bookings or series — view + cancel only, never destructive to anyone else's data.</p>
+      <div class="callout pro"><strong>Auth model:</strong> Stateless, HMAC-signed tokens (a 15-minute magic link and a 30-day session token) signed with your site's own secret — no new credentials, no password to manage.</div>
+
+      <h3 class="sub" id="pro-translations">In-plugin translations</h3>
+      <p style="color:var(--text-soft)">WPML/Polylang already translate your UI strings; this fills the one gap they don't — your <em>own</em> service names and descriptions. On the <strong>Translations</strong> screen, expand a service and add a per-locale name/description (restricted to locales actually installed on your site). The public services list and booking widget then serve the translated copy on an already-localized page automatically.</p>
+
+      <h3 class="sub" id="pro-api">External integration API</h3>
+      <p style="color:var(--text-soft)">A separate REST surface for external tools acting with your merchant authority — Zapier, a custom app, a future mobile client. Create an API key on the <strong>API Keys</strong> screen; the raw key is shown exactly once (only a hash is stored, like Stripe/GitHub). Keys carry a <code>read</code> or <code>read_write</code> scope and can create, list and cancel bookings through Free's real booking lifecycle, tagged <code>source: api</code>.</p>
+
+      <h3 class="sub" id="pro-csv">CSV import/export</h3>
+      <p style="color:var(--text-soft)">Bulk-move customers and bookings in and out via CSV — for migrating from another system or keeping an offline backup. Export supports the same status/date filters as the API. Import calls Free's own creation logic per row, skipping bad rows with a specific reason while the rest of the file still imports. Import is gated behind an explicit "I confirm I have a lawful basis" checkbox.</p>
+
+      <h3 class="sub" id="pro-events">Events with e-tickets</h3>
+      <p style="color:var(--text-soft)">A separate model from appointments: a fixed-time, multi-attendee gathering sold by ticket type. Ticket sales use an atomic reservation so the last ticket can't be oversold under a race. Check-in looks a ticket up by its human-readable number (<code>EVT-XXXXXX</code>) or QR token, within a one-hour-before-to-event-end window. Cancelling a ticket restores its quantity; an event can't be deleted once tickets have sold. The public purchase route is the one unauthenticated endpoint — everything else is capability- and license-gated.</p>
+
+      <h3 class="sub" id="pro-whitelabel">White-label branding</h3>
+      <p style="color:var(--text-soft)">Cosmetic rebranding of a single site for an agency or reseller. Set a brand name, tagline and logo, and optionally hide the Pro upsell card — the admin sidebar, header, and even the WordPress Plugins-list entries for both plugins are relabeled. When disabled (the default), everything reverts to Appointiva's own branding unchanged.</p>
+      <div class="callout pro"><strong>Scope:</strong> This is single-site cosmetic rebranding, not a multi-tenant reseller system that manages several separate client sites.</div>
+
+      <h3 class="sub" id="pro-elementor">Elementor widgets</h3>
+      <p style="color:var(--text-soft)">Two native widgets appear under the <strong>Appointiva</strong> category in the Elementor editor panel:</p>
+      <p style="color:var(--text-soft)"><strong>Booking Form</strong> renders Free's exact same booking form (same two-step flow, availability and REST calls — nothing is reimplemented), so behavior stays identical to the block and shortcode. In the <strong>Content</strong> tab you can preselect a single service (or let the visitor choose) and pick a light/dark theme; the <strong>Style</strong> tab exposes per-element controls for the container, progress steps, fields &amp; inputs, calendar, time slots, buttons, and summary/messages — colors, typography, borders, spacing and more.</p>
+      <p style="color:var(--text-soft)"><strong>Services Dropdown</strong> is a compact "pick a service and go" selector — ideal for a homepage hero or header. It lists every active service (optionally with duration and price) and, on submit, sends the visitor to your booking page with that service already selected. Point its <em>Booking page</em> at the page holding the Booking Form widget; leave it empty to submit to the current page (so a dropdown and form on the same page work together). The dropdown and button are fully style-able.</p>
+      <div class="callout pro"><strong>Live preview:</strong> The booking form is fully interactive right inside the Elementor editor — it hydrates as you add or edit the widget, so you can see your style changes against the real form. Like every Pro feature it's license-gated — visitors see nothing when the license is inactive, while an admin previewing the page sees a short notice explaining why.</div>
+
+    <!-- ============ COMPARE ============ -->
+    <section id="compare">
+      <div class="section-head">
+        <span class="section-tag tag-neutral">Comparison</span>
+        <h2 class="section-title">Free vs Pro at a glance</h2>
+        <p>Free is a complete booking plugin on its own. Pro adds team-scale and revenue features on top of it.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th class="center col-free">Free</th>
+              <th class="center col-pro">Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="feat">Booking calendar &amp; availability rules</td><td class="center"><span class="check">✓</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Email confirmations &amp; reminders <span class="mini">(locale-aware)</span></td><td class="center"><span class="check">✓</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">SMTP delivery with provider presets</td><td class="center"><span class="check">✓</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Stripe &amp; PayPal payments</td><td class="center"><span class="check">✓</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Gutenberg block &amp; shortcode</td><td class="center"><span class="check">✓</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Accessible widget · GDPR tools</td><td class="center"><span class="check">✓</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Google Calendar sync</td><td class="center"><span class="mini">One-way push</span></td><td class="center"><span class="check">✓</span> <span class="mini">Two-way</span></td></tr>
+            <tr><td class="feat">Staff per service</td><td class="center"><span class="mini">Single</span></td><td class="center"><span class="check">✓</span> <span class="mini">Multi-staff</span></td></tr>
+            <tr><td class="feat">WhatsApp reminders</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Recurring appointment series</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Prepaid session packages</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Deposits (fixed / percentage)</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Customer self-service dashboard</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Per-locale service translations</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">External REST API (API keys)</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">CSV import / export</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Events with e-tickets &amp; check-in</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">White-label branding</td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Elementor booking-form widget <span class="mini">(style-able)</span></td><td class="center"><span class="dash">—</span></td><td class="center"><span class="check">✓</span></td></tr>
+            <tr><td class="feat">Automatic licensed updates</td><td class="center"><span class="mini">WordPress.org</span></td><td class="center"><span class="check">✓</span> <span class="mini">License server</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="anchor-note">Pro requires the free Appointiva plugin to be installed and active. Features unlock once a valid license is activated.</p>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="brand"><span class="brand-mark">A</span> Appointiva</div>
+      <p style="margin-top:8px">Booking &amp; scheduling for WordPress · Free plugin + Pro add-on</p>
+    </div>
+    <p>Appointiva v1.0.0 &nbsp;·&nbsp; Appointiva Pro v1.9.0<br>Documentation generated for reference.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Theme toggle (respects OS default, remembers choice for the session)
+  var root=document.documentElement, btn=document.getElementById('themeToggle');
+  btn.addEventListener('click',function(){
+    var isDark = root.getAttribute('data-theme')==='dark'
+      || (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme:dark)').matches);
+    root.setAttribute('data-theme', isDark ? 'light':'dark');
+  });
+
+  // Mobile: quick jump to top / reveal nav via anchors already inline; toggle scrolls to overview
+  var menuBtn=document.getElementById('menuBtn');
+  if(menuBtn){ menuBtn.addEventListener('click',function(){ location.hash='#overview'; }); }
+
+  // Scroll-spy: highlight the active sidebar link
+  var links=[].slice.call(document.querySelectorAll('.sidebar a'));
+  var map={};
+  links.forEach(function(a){ var id=a.getAttribute('href').slice(1); map[id]=a; });
+  var targets=Object.keys(map).map(function(id){return document.getElementById(id);}).filter(Boolean);
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove('active');});
+        var a=map[e.target.id]; if(a){a.classList.add('active');}
+      }
+    });
+  },{rootMargin:'-40% 0px -55% 0px',threshold:0});
+  targets.forEach(function(t){obs.observe(t);});
+})();
+</script>
+</body>
+</html>
